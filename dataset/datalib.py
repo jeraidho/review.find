@@ -12,6 +12,7 @@ from typing import Literal
 from pydantic import BaseModel
 import stanza
 import warnings
+from collections import defaultdict
 
 
 # class for Review with typing
@@ -160,6 +161,9 @@ class Processor:
         self.metadata = {}
         self.tokendata = {}
 
+        # dict for already created indexes
+        self.indexes = {}
+
         self.metadata_filename = 'metadata.json'
         self.tokens_filename = 'tokendata.json'
 
@@ -196,8 +200,9 @@ class Processor:
         for key, value in tqdm(self.metadata.items(), desc='Rendering tokens in reviews'):
             for index, sentence in enumerate(value['sentences']):
                 for token in self.nlp(sentence).sentences[0].words:
-                    if token not in self.tokendata:
-                        self.tokendata[token.text] = {
+                    lower_token = token.text.lower()
+                    if lower_token not in self.tokendata:
+                        self.tokendata[lower_token] = {
                             'text_sentence_id': [f'{key}_{index}'],
                             'lemma': [token.lemma],
                             'upos': [token.upos],
@@ -205,20 +210,95 @@ class Processor:
                             'deprel': [token.deprel]
                         }
                     else:
-                        self.tokendata[token.text]['text_sentence_id'].append(f'{key}_{index}')
-                        self.tokendata[token.text]['lemma'].append(token.lemma)
-                        self.tokendata[token.text]['upos'].append(token.upos)
-                        self.tokendata[token.text]['features'].append(token.feats)
-                        self.tokendata[token.text]['deprel'].append(token.deprel)
+                        self.tokendata[lower_token]['text_sentence_id'].append(f'{key}_{index}')
+                        self.tokendata[lower_token]['lemma'].append(token.lemma)
+                        self.tokendata[lower_token]['upos'].append(token.upos)
+                        self.tokendata[lower_token]['features'].append(token.feats)
+                        self.tokendata[lower_token]['deprel'].append(token.deprel)
 
         # create file with
         if file_output:
             with open(self.tokens_filename, 'w') as f:
                 json.dump(self.tokendata, f)
 
+    def create_index(self, feature: str, file_output: bool = False):
+        """
+        Create index and file feature_index.json with index on chosen feature from tokendata
+        :param feature: feature of token from tokendata
+        :param file_output: creates json file if True
+        :return: None
+        """
 
+        # check if tokendata is inserted
+        if not self.tokendata:
+            raise ValueError('Tokendata is not rendered, consider using render_tokens method')
+
+        if feature in self.indexes:
+            warnings.warn(f'Index for {feature} already created, it is going to be overwritten')
+
+        # check if token feature is correct
+        if feature not in ['text_sentence_id', 'lemma', 'upos', 'features', 'deprel']:
+            raise ValueError(f'Feature "{feature}" is incorrect')
+
+        # result data
+        index = defaultdict(list)
+
+        # iterate through tokens
+        for key, value in tqdm(self.tokendata.items(), desc=f'Create index for "{feature}"'):
+            for item in value[feature]:
+                if key not in index[item]:
+                    index[item].append(key)
+
+        # add created index in indexes
+        self.indexes[feature] = index
+
+        # create file with metadata
+        if file_output:
+            with open(feature + '_index.json', 'w') as f:
+                json.dump(index, f)
+
+    def create_inner_index(self, feature1: str, feature2: str, file_output: bool = False):
+        """
+        Create index feature-to-feature and file feature_index.json with index on chosen feature from tokendata
+        :param feature1: feature of token from tokendata
+        :param feature2: feature of token from tokendata
+        :param file_output: creates json file if True
+        :return: None
+        """
+        # check if tokendata is inserted
+        if not self.tokendata:
+            raise ValueError('Tokendata is not rendered, consider using render_tokens method')
+
+        if feature1 + '_' + feature2 in self.indexes:
+            warnings.warn(f'Index for this features already created, it is going to be overwritten')
+
+        if feature1 == feature2:
+            raise ValueError('Equal features are inserted')
+
+        for feature in [feature1, feature2]:
+            # check if token feature is correct
+            if feature not in ['text_sentence_id', 'lemma', 'upos', 'features', 'deprel']:
+                raise ValueError(f'Feature "{feature}" is incorrect')
+
+        # result data
+        index = defaultdict(list)
+
+        # iterate through tokens
+        for key, value in tqdm(self.tokendata.items(), desc=f'Create index for "{feature1}" and "{feature2}"'):
+            for item in zip(value[feature1], value[feature2]):
+                if item[1] not in index[item[0]]:
+                    index[item[0]].append(item[1])
+
+        # add created index in indexes
+        self.indexes[feature1 + '_' + feature2] = index
+
+        # create file with metadata
+        if file_output:
+            with open(feature1 + '_' + feature2 + '_index.json', 'w') as f:
+                json.dump(index, f)
 
     def read_data(self, type: str, filename: str = '', data: dict = {}):
+
         """
         Save data (tokendata or metadata) to class instance from file or from data
         :param type: metadata or tokendata
@@ -226,6 +306,7 @@ class Processor:
         :param data: data itself in format of file
         :return: None
         """
+
         if type not in ['metadata', 'tokendata']:
             raise ValueError('Incorrect data inserted')
 
@@ -248,25 +329,27 @@ class Processor:
                     self.metadata = json.load(f)
                 if type == 'tokendata':
                     self.tokendata = json.load(f)
-        elif not filename and data:
-            if type == 'metadata':
-                self.metadata = data
-            if type == 'tokendata':
-                self.tokendata = data
+                elif not filename and data:
+                    if type == 'metadata':
+                        self.metadata = data
+                    if type == 'tokendata':
+                        self.tokendata = data
 
 
 if __name__ == "__main__":
     # collect dataset
-    # crawler = ReviewCrawler()
-    # crawler.crawl(json_autosave=True)
-    # crawler.pickle_save()
+    crawler = ReviewCrawler()
+    crawler.crawl(json_autosave=True)
+    crawler.pickle_save()
 
     # create two json-files of dataset
     with open('reviews-plain.json', 'r') as f:
         reviews = json.load(f)
 
     processor = Processor(reviews)
-    # processor.render_meta(file_output=True)
+    processor.render_meta(file_output=True)
     processor.read_data('metadata', 'metadata.json')
     processor.render_tokens(file_output=True)
-
+    # processor.read_data('tokendata', 'tokendata.json')
+    processor.create_index('lemma', file_output=True)
+    processor.create_inner_index('upos', 'text_sentence_id', file_output=True)
