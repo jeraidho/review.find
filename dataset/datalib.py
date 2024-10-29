@@ -203,14 +203,14 @@ class Processor:
                     lower_token = token.text.lower()
                     if lower_token not in self.tokendata:
                         self.tokendata[lower_token] = {
-                            'text_sentence_id': [f'{key}_{index}'],
+                            'text_sentence_id': [f'{key}_{index}_{token.id}'],
                             'lemma': [token.lemma],
                             'upos': [token.upos],
                             'features': [token.feats],
                             'deprel': [token.deprel]
                         }
                     else:
-                        self.tokendata[lower_token]['text_sentence_id'].append(f'{key}_{index}')
+                        self.tokendata[lower_token]['text_sentence_id'].append(f'{key}_{index}_{token.id}')
                         self.tokendata[lower_token]['lemma'].append(token.lemma)
                         self.tokendata[lower_token]['upos'].append(token.upos)
                         self.tokendata[lower_token]['features'].append(token.feats)
