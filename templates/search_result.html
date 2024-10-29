@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Результаты{% endblock %}
+
+{% block content %}
+    <h1>Результаты поиска</h1>
+     <ol>
+        {% for i in out_ %}
+            <div class="dropdown">
+            <button class="dropbtn">{{ i[1] }}</button>
+                <div class="dropdown-content">
+                <p>Text ID: {{ i[0] }}</p>
+                <p>Sentiment: {{ i[2] }}</p>
+                <p>Film name: {{ i[3] }}</p>
+                </div>
+            </div>
+            <br>
+        {% endfor %}
+    </ol>
+
+{% endblock %}
