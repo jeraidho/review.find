@@ -36,7 +36,7 @@ class ReviewCrawler:
         self.user_agent = UserAgent()
 
         # main url
-        self.url = 'https://www.kinopoisk.ru/reviews/type/comment/period/month/perpage/100/'
+        self.url = 'https://www.kinopoisk.ru/reviews/type/comment/period/month/page/'
 
         # filename and time for backup while crawling
         self.moment = time.strftime("%Y-%b-%d_%H_%M_%S", time.localtime())
@@ -343,12 +343,12 @@ if __name__ == "__main__":
     crawler.pickle_save()
 
     # create two json-files of dataset
-    with open('reviews-plain.json', 'r') as f:
+    with open('reviews.json', 'r') as f:
         reviews = json.load(f)
 
     processor = Processor(reviews)
     processor.render_meta(file_output=True)
-    processor.read_data('metadata', 'metadata.json')
+    # processor.read_data('metadata', 'metadata.json')
     processor.render_tokens(file_output=True)
     # processor.read_data('tokendata', 'tokendata.json')
     processor.create_index('lemma', file_output=True)
