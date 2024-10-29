@@ -21,7 +21,7 @@ def query_process():
         result = query.process_query(search)
         with open('result.csv', 'w', newline='', encoding='utf-8') as file:
             datawriter = csv.DictWriter(file, delimiter='\t', fieldnames=['text_id', 'sentence', 'sentiment', 'film_name'])
-             for sentence in result:
+            for sentence in result:
                 datawriter.writerow(sentence)
         return redirect(url_for('search_result'))
     return render_template('search.html')
