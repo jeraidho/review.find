@@ -32,7 +32,7 @@ def search():
 @app.route('/search_result', methods=['GET', 'POST'])
 def search_result():
     if request.method == 'POST':
-        return send_file("templates/pupupu", as_attachment=True)
+        return send_file("results.csv", as_attachment=True)
     df = pd.read_csv('result.csv', delimiter='\t', encoding='utf-8')
     out = df.values.tolist()
     out_ = out
