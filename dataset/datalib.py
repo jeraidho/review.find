@@ -521,7 +521,7 @@ class SentenceFinder:
                 sentiment = entry['sentiment']
                 film_name = entry['film_name']
 
-                key = (text_id, sentence)
+                key = (text_id, sentence, sentiment, film_name)
 
                 if key not in sentences:
                     sentences[key] = []
@@ -532,10 +532,11 @@ class SentenceFinder:
         result = []
 
         # Checking all sentences for sequential word_id
-        for (text_id, sentence), word_ids in sentences.items():
+        for (text_id, sentence, sentiment, film_name), word_ids in sentences.items():
             if len(word_ids) == len(final_dict):  # Checking if sentence is found for all words
                 if sorted(word_ids) == list(
                         range(min(word_ids), min(word_ids) + len(word_ids))):  # Checking the sequence
+                    print(sentence)
                     result.append(
                         {'text_id': text_id, 'sentence': sentence, 'sentiment': sentiment, 'film_name': film_name})
 
