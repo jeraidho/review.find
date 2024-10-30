@@ -362,7 +362,7 @@ class SentenceFinder:
         data = []
         # iterate through files
         for path in ['metadata.json', 'tokendata.json', 'lemma_index.json']:
-            with open(path if in_dataset else 'dataset/' + path, 'r', encoding='utf-8') as f:
+            with open(path if in_dataset else 'corpus/dataset/' + path, 'r', encoding='utf-8') as f:
                 data.append(json.load(f))
 
         return tuple(data)
