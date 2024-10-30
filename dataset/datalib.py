@@ -347,8 +347,12 @@ class Processor:
 class SentenceFinder:
     def __init__(self, inner: bool = False):
 
+        stanza.download('ru')
+        self.nlp = stanza.Pipeline('ru')
+
         # define class variables
         self.metadata, self.tokendata, self.lemma_index_data = self.load_data(inner)
+
 
     @staticmethod
     def load_data(in_dataset) -> Tuple[dict]:
@@ -429,6 +433,9 @@ class SentenceFinder:
         :return: all sentences including tokens with this lemma
         """
         lemma_results = []
+        doc = self.nlp(lemma)
+        lemmas = [word.lemma for t in doc.iter_tokens() for word in t.words]
+        lemma = lemmas[0]
         if lemma in self.lemma_index_data:
             for token in self.lemma_index_data[lemma]:
                 lemma_results.append(self.find_sentences_with_token(token))
