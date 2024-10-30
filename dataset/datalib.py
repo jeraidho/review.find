@@ -536,7 +536,6 @@ class SentenceFinder:
             if len(word_ids) == len(final_dict):  # Checking if sentence is found for all words
                 if sorted(word_ids) == list(
                         range(min(word_ids), min(word_ids) + len(word_ids))):  # Checking the sequence
-                    print(sentence)
                     result.append(
                         {'text_id': text_id, 'sentence': sentence, 'sentiment': sentiment, 'film_name': film_name})
 
