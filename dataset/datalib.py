@@ -353,7 +353,6 @@ class SentenceFinder:
         # define class variables
         self.metadata, self.tokendata, self.lemma_index_data = self.load_data(inner)
 
-
     @staticmethod
     def load_data(in_dataset) -> Tuple[dict]:
         """
@@ -447,35 +446,38 @@ class SentenceFinder:
         :return: all sentences including tokens with this feature
         """
         results = []
+        feature_list = ['upos', 'features', 'deprel']
+        feature_key_value = feature_query.split('=')
+        if len(feature_key_value) == 1:
+            feature_key_value.append("")
+        feature_key, feature_value = feature_key_value  # splitting feature and feature value
+        if feature_key in feature_list:  # check for correct feature_key
 
-        # splitting feature and feature value
-        feature_key, feature_value = feature_query.split('=')
+            for token in self.tokendata:
+                for i in range(len(self.tokendata[token][feature_key])):
+                    dic = {}
+                    elem = self.tokendata[token][feature_key][i]
+                    if elem != None:
+                        if feature_value == elem or feature_key == "features" and feature_value in elem:
+                            text_sentence_id = self.tokendata[token]['text_sentence_id'][i]
+                            # getting text_id and sentence_id
+                            text_id = text_sentence_id.split('_')[0]
+                            sentence_id = int(text_sentence_id.split('_')[1])
+                            word_index = text_sentence_id.split('_')[2]
+                            sentiment = self.metadata[text_id]["sentiment"]
+                            film_name = self.metadata[text_id]["film_name"]
 
-        for token in self.tokendata:
-            for i in range(len(self.tokendata[token][feature_key])):
-                dic = {}
-                elem = self.tokendata[token][feature_key][i]
-                if elem != None:
-                    if feature_value == elem or feature_key == "features" and feature_value in elem:
-                        text_sentence_id = self.tokendata[token]['text_sentence_id'][i]
-                        # getting text_id and sentence_id
-                        text_id = text_sentence_id.split('_')[0]
-                        sentence_id = int(text_sentence_id.split('_')[1])
-                        word_index = text_sentence_id.split('_')[2]
-                        sentiment = self.metadata[text_id]["sentiment"]
-                        film_name = self.metadata[text_id]["film_name"]
-
-                        # Getting the sentence from metadata by text_id and sentence_id
-                        if text_id in self.metadata:
-                            sentences = self.metadata[text_id]['sentences']
-                            if 0 <= sentence_id < len(sentences):
-                                sentence = sentences[sentence_id]
-                                dic["text_id"] = text_id
-                                dic["sentence"] = sentence
-                                dic['word_index'] = word_index
-                                dic['sentiment'] = sentiment
-                                dic['film_name'] = film_name
-                                results.append(dic)
+                            # Getting the sentence from metadata by text_id and sentence_id
+                            if text_id in self.metadata:
+                                sentences = self.metadata[text_id]['sentences']
+                                if 0 <= sentence_id < len(sentences):
+                                    sentence = sentences[sentence_id]
+                                    dic["text_id"] = text_id
+                                    dic["sentence"] = sentence
+                                    dic['word_index'] = word_index
+                                    dic['sentiment'] = sentiment
+                                    dic['film_name'] = film_name
+                                    results.append(dic)
 
         return results
 
@@ -485,6 +487,9 @@ class SentenceFinder:
         return bool(re.search('[а-яёА-ЯЁ]', text))
 
     def understand_query_part(self, query_part):
+        sentiment_lst = ["neutral", "positive", "negative"]
+        if '!' in query_part and query_part[1:] in sentiment_lst:
+            return "sentiment"
         if '"' in query_part:
             if "+" in query_part:
                 return "token+tag"
@@ -542,13 +547,18 @@ class SentenceFinder:
         :return: consecutive sentences with the query included
         """
         if "'" in query:
-            query = query.replace("'", '"')
+            query = query.replace("'", '"')  # "" for Russian
         query_list = query.split()
         final_dict = {}
+        sentiment = ["neutral", "positive", "negative"]
         for word in query_list:
+
             if self.understand_query_part(word) == "token":
                 final_dict[word] = self.find_sentences_with_token(word[1:-1])
+
             if self.understand_query_part(word) == "lemma":
+                # lemma will be found even if another word form
+                # for example, проекта will return the same resuls as проект
                 lemma_results = self.find_sentences_with_lemma(word)
                 final = []
                 for lemma in lemma_results:
@@ -565,6 +575,7 @@ class SentenceFinder:
                     token_results = self.search_feature(feature, feature_value, token_results)
 
                 final_dict[word] = self.search_feature(token_results)
+
             if self.understand_query_part(word) == "lemma+tag":
                 lemma_and_tags = word.split("+")
                 lemma = lemma_and_tags[0]
@@ -581,7 +592,10 @@ class SentenceFinder:
                 for lemma in test_lemma_feature:
                     final = final + lemma
                     final_dict[word] = final
+
             if self.understand_query_part(word) == "tag":
+                # it is possible to search for multiple tags
+                # for example, upos=VERB+features=Ins
                 if "+" in word:
                     tags = word.split("+")
                     tags_dic = {}
@@ -597,9 +611,18 @@ class SentenceFinder:
                 else:
                     final_dict[word] = self.find_sentences_with_feature_no_token(word)
 
-        consecutive_sentences = self.get_consecutive_sentences(final_dict)
+            if self.understand_query_part(word) == "sentiment":  # filter for sentiment
 
-        return consecutive_sentences
+                sentiment = [word[1:]]
+
+        sentiment_sentences = []
+
+        for sentence in self.get_consecutive_sentences(final_dict):
+
+            if sentence["sentiment"] in sentiment:
+                sentiment_sentences.append(sentence)
+
+        return sentiment_sentences
 
 
 if __name__ == "__main__":
