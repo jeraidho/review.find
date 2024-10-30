@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+body {
+ background-image: radial-gradient(at 53.15651681142863% 20.448357845305875%, hsla(102.8571428571428, 100%, 97.25490196078431%, 1) 0%, hsla(102.8571428571428, 100%, 97.25490196078431%, 0) 100%), radial-gradient(at 71.6184919181164% 63.1946180136715%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 1) 0%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 0) 100%), radial-gradient(at 63.45100715085798% 85.19491593131909%, hsla(102.8571428571428, 100%, 97.25490196078431%, 1) 0%, hsla(102.8571428571428, 100%, 97.25490196078431%, 0) 100%), radial-gradient(at 3.3569526427135177% 91.02675900842168%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 1) 0%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 0) 100%), radial-gradient(at 36.16235628458118% 91.0373574133346%, hsla(102.8571428571428, 100%, 97.25490196078431%, 1) 0%, hsla(102.8571428571428, 100%, 97.25490196078431%, 0) 100%), radial-gradient(at 80.31855315731708% 61.72203608762603%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 1) 0%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 0) 100%), radial-gradient(at 66.77383086162212% 37.1886888841481%, hsla(102.8571428571428, 100%, 97.25490196078431%, 1) 0%, hsla(102.8571428571428, 100%, 97.25490196078431%, 0) 100%);
+ font-family: "Gentium Plus", Times, serif;
+ font-size: 110%;
+}
+
+.top_navigation_bar {
+  background-color: #ca8268;
+  font-family: 'Trebuchet MS', Verdana, sans-serif;
+  font-size: 1.1em;
+}
+
+.top_navigation_bar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.top_navigation_bar li a {
+  float: left;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.top_navigation_bar li a:hover {
+  background-color: #9d90bf;
+}
+
+input[type="text"] {
+  margin-left: 0.4cm;
+  font-family: "Gentium Plus", Times, serif;
+  font-size: 80%;
+  border: 1.2px inset #a24b2b;
+  background-color: #f5fff1;
+  outline: none;
+}
+
+input[type="text"]:focus {
+  border-width: 1.7px;
+}
+
+input[type="submit"] {
+  padding: 10px;
+  font-family: 'Trebuchet MS', Verdana, sans-serif;
+  font-size: 90%;
+  background-color: #9d90bf;
+  border-radius: 6px;
+}
+
+input[type="submit"]:hover {
+  background-color: #ca8268;
+}
+
+.dropbtn {
+  background-color: white;
+  color: black;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
