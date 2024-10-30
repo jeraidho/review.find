@@ -21,6 +21,11 @@ def render_result_page():
                                                        ["001", "Ужасно увлекательный фильм!", "positive", "Палки"],
                                                        ["001", "Ужасно весело!", "positive", "Ёлки"]]) # страница поиска
 
+@app.route('/nothing_found')
+def nothing_found():
+    out_ = "Предложения не найдены\n"
+    return render_template('nothing_found.html', out_=out_)
+
 
 # @app.route('/search', methods = ['GET', 'POST'])
 # def query_process():
