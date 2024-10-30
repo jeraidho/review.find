@@ -5,7 +5,7 @@
 {% block content %}
     <div class="output_successful">
         <form method="post">
-        <h1>Результаты поиска <button type="submit" formmethod="post">Скачать контексты</button></h1>
+        <h1>Результаты поиска<a href="../result.csv" download="results.csv"><button type="submit">Скачать контексты</button></a></h1>
         </form>
         <table>
           {% for i in out_ %}
