@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 body {
+ min-height: 95vh;
  background-image: radial-gradient(at 53.15651681142863% 20.448357845305875%, hsla(102.8571428571428, 100%, 97.25490196078431%, 1) 0%, hsla(102.8571428571428, 100%, 97.25490196078431%, 0) 100%), radial-gradient(at 71.6184919181164% 63.1946180136715%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 1) 0%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 0) 100%), radial-gradient(at 63.45100715085798% 85.19491593131909%, hsla(102.8571428571428, 100%, 97.25490196078431%, 1) 0%, hsla(102.8571428571428, 100%, 97.25490196078431%, 0) 100%), radial-gradient(at 3.3569526427135177% 91.02675900842168%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 1) 0%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 0) 100%), radial-gradient(at 36.16235628458118% 91.0373574133346%, hsla(102.8571428571428, 100%, 97.25490196078431%, 1) 0%, hsla(102.8571428571428, 100%, 97.25490196078431%, 0) 100%), radial-gradient(at 80.31855315731708% 61.72203608762603%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 1) 0%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 0) 100%), radial-gradient(at 66.77383086162212% 37.1886888841481%, hsla(102.8571428571428, 100%, 97.25490196078431%, 1) 0%, hsla(102.8571428571428, 100%, 97.25490196078431%, 0) 100%);
- font-family: "Gentium Plus", Times, serif;
+ font-family: "Gentium Plus", "Times New Roman", Times, serif;
  font-size: 110%;
 }
 
@@ -48,7 +49,7 @@ body {
 
 input[type="text"] {
   margin-left: 0.4cm;
-  font-family: "Gentium Plus", Times, serif;
+  font-family: "Gentium Plus", "Times New Roman", Times, serif;
   font-size: 80%;
   border: 1.2px inset #a24b2b;
   background-color: #f5fff1;
@@ -68,6 +69,21 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
+  background-color: #ca8268;
+}
+
+button[type="submit"] {
+  float: right;
+  margin: 5px 10px 5px;
+  padding: 7px;
+  font-family: "Gentium Plus", "Times New Roman", Times, serif;
+  font-weight: 700;
+  font-size: 50%;
+  background-color: #9d90bf;
+  border-radius: 6px;
+}
+
+button[type="submit"]:hover {
   background-color: #ca8268;
 }
 

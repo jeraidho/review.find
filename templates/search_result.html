@@ -4,26 +4,24 @@
 
 {% block content %}
     <div class="output_successful">
-      <h1>Результаты поиска</h1>
+        <form method="post">
+        <h1>Результаты поиска <button type="submit" formmethod="post">Скачать контексты</button></h1>
+        </form>
         <table>
           {% for i in out_ %}
-           <tr>
-              <div class="context">
-                  <td class="sentence">
-                      <p>{{ i[1] }}</p>
-                  </td>
-                  <div class="additional">
-                      <td>
-                          <p>Text ID: {{ i[0] }}</p>
-                      </td>
-                      <td>
-                          <p>Sentiment: {{ i[2] }}</p>
-                      </td>
-                      <td>
-                          <p>Film name: {{ i[3] }}</p>
-                      </td>
-                  </div>
-              </div>
+           <tr class="context">
+               <td class="sentence">
+                   <p>{{ i[1] }}</p>
+               </td>
+               <td class="additional">
+                   <p>Text ID: {{ i[0] }}</p>
+               </td>
+               <td class="additional">
+                   <p>Sentiment: {{ i[2] }}</p>
+               </td>
+               <td class="additional">
+                   <p>Film name: {{ i[3] }}</p>
+               </td>
            </tr>
            {% endfor %}
        </table>

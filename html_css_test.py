@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import url_for, render_template, request, redirect
+from flask import url_for, render_template, request, redirect, send_file
 import csv
 import pandas as pd
 app = Flask(__name__)
@@ -15,8 +15,11 @@ def render_search_page():
     return render_template('search.html') # страница поиска
 
 
-@app.route('/search_res_test')
+@app.route('/search_res_test', methods=["GET", "POST"])
 def render_result_page():
+    if request.method == 'POST':
+        return send_file("templates/pupupu", as_attachment=True)
+
     return render_template('search_result.html', out_=[["001", "Ужасно снятый фильм.", "negative", "Ёлки"],
                                                        ["001", "Ужасно увлекательный фильм!", "positive", "Палки"],
                                                        ["001", "Ужасно весело!", "positive", "Ёлки"]]) # страница поиска
