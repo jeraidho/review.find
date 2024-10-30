@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Результаты{% endblock %}
+
+{% block content %}
+    <div class="output_successful">
+        <form method="post">
+        <h1>Результаты поиска<a href="../result.csv" download="results.csv"><button type="submit">Скачать контексты</button></a></h1>
+        </form>
+        <table>
+          {% for i in out_ %}
+           <tr class="context">
+               <td class="sentence">
+                   <p>{{ i[1] }}</p>
+               </td>
+               <td class="additional">
+                   <p>Text ID: {{ i[0] }}</p>
+               </td>
+               <td class="additional">
+                   <p>Sentiment: {{ i[2] }}</p>
+               </td>
+               <td class="additional">
+                   <p>Film name: {{ i[3] }}</p>
+               </td>
+           </tr>
+           {% endfor %}
+       </table>
+    </div>
+
+{% endblock %}

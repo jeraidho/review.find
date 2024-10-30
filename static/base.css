@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+body {
+ min-height: 95vh;
+ background-image: radial-gradient(at 53.15651681142863% 20.448357845305875%, hsla(102.8571428571428, 100%, 97.25490196078431%, 1) 0%, hsla(102.8571428571428, 100%, 97.25490196078431%, 0) 100%), radial-gradient(at 71.6184919181164% 63.1946180136715%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 1) 0%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 0) 100%), radial-gradient(at 63.45100715085798% 85.19491593131909%, hsla(102.8571428571428, 100%, 97.25490196078431%, 1) 0%, hsla(102.8571428571428, 100%, 97.25490196078431%, 0) 100%), radial-gradient(at 3.3569526427135177% 91.02675900842168%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 1) 0%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 0) 100%), radial-gradient(at 36.16235628458118% 91.0373574133346%, hsla(102.8571428571428, 100%, 97.25490196078431%, 1) 0%, hsla(102.8571428571428, 100%, 97.25490196078431%, 0) 100%), radial-gradient(at 80.31855315731708% 61.72203608762603%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 1) 0%, hsla(46.92307692307693, 63.934426229508176%, 76.07843137254902%, 0) 100%), radial-gradient(at 66.77383086162212% 37.1886888841481%, hsla(102.8571428571428, 100%, 97.25490196078431%, 1) 0%, hsla(102.8571428571428, 100%, 97.25490196078431%, 0) 100%);
+ font-family: "Gentium Plus", "Times New Roman", Times, serif;
+ font-size: 110%;
+}
+
+.oops {
+  height: inherit;
+  width: inherit;
+  padding: 5%;
+  background-image: radial-gradient(at 17.292296935854743% 54.95999664250877%, hsla(105.00000000000004, 3.773584905660378%, 58.4313725490196%, 1) 0%, hsla(105.00000000000004, 3.773584905660378%, 58.4313725490196%, 0) 100%), radial-gradient(at 37.42735121341103% 97.50372841771797%, hsla(47.234042553191465, 20.171673819742495%, 45.68627450980392%, 1) 0%, hsla(47.234042553191465, 20.171673819742495%, 45.68627450980392%, 0) 100%), radial-gradient(at 64.35733444857985% 64.11976653951132%, hsla(105.00000000000004, 3.773584905660378%, 58.4313725490196%, 1) 0%, hsla(105.00000000000004, 3.773584905660378%, 58.4313725490196%, 0) 100%);
+}
+
+.output_successful {
+  height: inherit;
+  width: inherit;
+  padding: 5%;
+  background-image: radial-gradient(at 70.1908842159554% 25.866252535457022%, hsla(105.00000000000004, 100%, 98.43137254901961%, 1) 0%, hsla(105.00000000000004, 100%, 98.43137254901961%, 0) 100%), radial-gradient(at 42.17630737230162% 10.440804660376713%, hsla(47.2340425531915, 64.38356164383559%, 85.68627450980392%, 1) 0%, hsla(47.2340425531915, 64.38356164383559%, 85.68627450980392%, 0) 100%), radial-gradient(at 47.84529858490711% 24.30491900521914%, hsla(105.00000000000004, 100%, 98.43137254901961%, 1) 0%, hsla(105.00000000000004, 100%, 98.43137254901961%, 0) 100%), radial-gradient(at 72.51134119272884% 63.88253297379276%, hsla(47.2340425531915, 64.38356164383559%, 85.68627450980392%, 1) 0%, hsla(47.2340425531915, 64.38356164383559%, 85.68627450980392%, 0) 100%), radial-gradient(at 63.84582928684151% 78.20282718789716%, hsla(105.00000000000004, 100%, 98.43137254901961%, 1) 0%, hsla(105.00000000000004, 100%, 98.43137254901961%, 0) 100%), radial-gradient(at 5.795210368296777% 26.921983293691554%, hsla(47.2340425531915, 64.38356164383559%, 85.68627450980392%, 1) 0%, hsla(47.2340425531915, 64.38356164383559%, 85.68627450980392%, 0) 100%), radial-gradient(at 61.642581537443796% 60.492344936162404%, hsla(105.00000000000004, 100%, 98.43137254901961%, 1) 0%, hsla(105.00000000000004, 100%, 98.43137254901961%, 0) 100%), radial-gradient(at 69.40760731632254% 56.8972137904491%, hsla(47.2340425531915, 64.38356164383559%, 85.68627450980392%, 1) 0%, hsla(47.2340425531915, 64.38356164383559%, 85.68627450980392%, 0) 100%), radial-gradient(at 16.457601454634265% 55.483486113955884%, hsla(105.00000000000004, 100%, 98.43137254901961%, 1) 0%, hsla(105.00000000000004, 100%, 98.43137254901961%, 0) 100%), radial-gradient(at 65.0865407372035% 83.74356011387172%, hsla(47.2340425531915, 64.38356164383559%, 85.68627450980392%, 1) 0%, hsla(47.2340425531915, 64.38356164383559%, 85.68627450980392%, 0) 100%), radial-gradient(at 77.45013692578333% 42.080476945882%, hsla(105.00000000000004, 100%, 98.43137254901961%, 1) 0%, hsla(105.00000000000004, 100%, 98.43137254901961%, 0) 100%);
+}
+
+.top_navigation_bar {
+  background-color: #ca8268;
+  font-family: 'Trebuchet MS', Verdana, sans-serif;
+  font-size: 1.1em;
+}
+
+.top_navigation_bar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.top_navigation_bar li a {
+  float: left;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.top_navigation_bar li a:hover {
+  background-color: #9d90bf;
+}
+
+input[type="text"] {
+  margin-left: 0.4cm;
+  font-family: "Gentium Plus", "Times New Roman", Times, serif;
+  font-size: 80%;
+  border: 1.2px inset #a24b2b;
+  background-color: #f5fff1;
+  outline: none;
+}
+
+input[type="text"]:focus {
+  border-width: 1.7px;
+}
+
+input[type="submit"] {
+  padding: 10px;
+  font-family: 'Trebuchet MS', Verdana, sans-serif;
+  font-size: 90%;
+  background-color: #9d90bf;
+  border-radius: 6px;
+}
+
+input[type="submit"]:hover {
+  background-color: #ca8268;
+}
+
+button[type="submit"] {
+  float: right;
+  margin: 5px 10px 5px;
+  padding: 7px;
+  font-family: "Gentium Plus", "Times New Roman", Times, serif;
+  font-weight: 700;
+  font-size: 50%;
+  background-color: #9d90bf;
+  border-radius: 6px;
+}
+
+button[type="submit"]:hover {
+  background-color: #ca8268;
+}
+
+table, th, td {
+  border: 0.7px solid #9d90bf;
+}
+
+table {
+  width: 100%;
+}
+
+td {
+  padding: 5px;
+}
+
+.sentence {
+  width: 60%;
+}
+
+
+.sentence:hover {
+  background-color: #ca8268;
+}
