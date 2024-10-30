@@ -3,19 +3,30 @@
 {% block title %}Результаты{% endblock %}
 
 {% block content %}
-    <h1>Результаты поиска</h1>
-     <ol>
-        {% for i in out_ %}
-            <div class="dropdown">
-            <button class="dropbtn">{{ i[1] }}</button>
-                <div class="dropdown-content">
-                <p>Text ID: {{ i[0] }}</p>
-                <p>Sentiment: {{ i[2] }}</p>
-                <p>Film name: {{ i[3] }}</p>
-                </div>
-            </div>
-            <br>
-        {% endfor %}
-    </ol>
+    <div class="output_successful">
+      <h1>Результаты поиска</h1>
+        <table>
+          {% for i in out_ %}
+           <tr>
+              <div class="context">
+                  <td class="sentence">
+                      <p>{{ i[1] }}</p>
+                  </td>
+                  <div class="additional">
+                      <td>
+                          <p>Text ID: {{ i[0] }}</p>
+                      </td>
+                      <td>
+                          <p>Sentiment: {{ i[2] }}</p>
+                      </td>
+                      <td>
+                          <p>Film name: {{ i[3] }}</p>
+                      </td>
+                  </div>
+              </div>
+           </tr>
+           {% endfor %}
+       </table>
+    </div>
 
 {% endblock %}
