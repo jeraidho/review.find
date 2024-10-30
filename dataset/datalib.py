@@ -360,7 +360,7 @@ class SentenceFinder:
     def find_sentences_with_token(self, token):
         token_results = []
 
-        if self.tokendata[token]:
+        if token in self.tokendata:
             entry = self.tokendata[token]
 
             text_sentence_id = entry['text_sentence_id']
@@ -416,8 +416,9 @@ class SentenceFinder:
 
     def find_sentences_with_lemma(self, lemma):
         lemma_results = []
-        for token in self.lemma_index_data[lemma]:
-            lemma_results.append(self.find_sentences_with_token(token))
+        if lemma in self.lemma_index_data:
+            for token in self.lemma_index_data[lemma]:
+                lemma_results.append(self.find_sentences_with_token(token))
         return lemma_results
 
     # ПОИСК ФИЧИ БЕЗ ТОКЕНА
@@ -469,12 +470,12 @@ class SentenceFinder:
         return bool(re.search('[а-яёА-ЯЁ]', text))
 
     def understand_query_part(self, query_part):
-        if "'" in query_part:
+        if '"' in query_part:
             if "+" in query_part:
                 return "token+tag"
             else:
                 return "token"
-        elif self.has_cyrillic(query_part):
+        elif '"' not in query_part and self.has_cyrillic(query_part):
             if "+" in query_part:
                 return "lemma+tag"
             else:
@@ -519,6 +520,8 @@ class SentenceFinder:
         return result
 
     def process_query(self, query):
+        if "'" in query:
+            query = query.replace("'", '"')
         query_list = query.split()
         final_dict = {}
         for word in query_list:
@@ -605,7 +608,7 @@ if __name__ == "__main__":
     finder = SentenceFinder(inner=True)
 
     # user query
-    user_query = input("Введите ваш запрос (например, token=lemma1): ")
+    user_query = input("Введите ваш запрос: ")
 
     # query rendering
     found_sentences = finder.process_query(user_query)
@@ -614,4 +617,5 @@ if __name__ == "__main__":
     if found_sentences:
         print(found_sentences)
     else:
-        print("Предложения не найдены.")
+        print("WRONG QUERY")
+
