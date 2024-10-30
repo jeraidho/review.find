@@ -1,6 +1,5 @@
 import requests
 from fake_useragent import UserAgent
-from sympy.codegen.cnodes import static
 from tqdm import tqdm
 import time
 from bs4 import BeautifulSoup
@@ -123,10 +122,18 @@ class ReviewCrawler:
                         self.saved = self.counter
 
     def pickle_save(self):
+        """
+        Save reviews in binary pkl-format with moment tag
+        :return: None
+        """
         with open('reviews-' + self.moment + '.pkl', 'wb') as f:
             pickle.dump(self.reviews, f)
 
     def json_save(self):
+        """
+        Save reviews in dict json-format with moment tag
+        :return: None
+        """
         with open('reviews-' + self.moment + '.json', 'w') as f:
             json.dump({review.id: review.dict() for review in self.reviews}, f)
 
@@ -358,6 +365,10 @@ class SentenceFinder:
         return tuple(data)
 
     def find_sentences_with_token(self, token):
+        """
+        Load token data
+        :return: list including dict with token information
+        """
         token_results = []
 
         if token in self.tokendata:
@@ -367,12 +378,9 @@ class SentenceFinder:
             upos = entry['upos']
             features = entry['features']
             deprel = entry['deprel']
-            # print(text_sentence_id)
             for i in range(len(text_sentence_id)):
-                # for t_s_id in text_sentence_id:
                 t_s_id = text_sentence_id[i]
                 text_id, sentence_index, word_index = t_s_id.split('_')
-                # print(text_id)
                 upo = upos[i]
                 feature = features[i]
                 depr = deprel[i]
@@ -395,12 +403,15 @@ class SentenceFinder:
                         results["film_name"] = film_name
                 token_results.append(results)
 
-        # print(token_results)
         return token_results
 
     # поиск фичи c токеном
     @staticmethod
     def search_feature(feature, feature_value, token_results):
+        """
+        Search token+feature=feature_value
+        :return: list of sentences including input token with input feature
+        """
         have_feature = []
         for result in token_results:
 
@@ -408,50 +419,46 @@ class SentenceFinder:
 
                 have_feature.append(result)
             else:
-                if feature == "features" and feature_value in result[feature]:  # проверить не будет ли конфуза
+                if feature == "features" and feature_value in result[feature]:
                     have_feature.append(result)
         return have_feature
 
-        # find lemma
-
     def find_sentences_with_lemma(self, lemma):
+        """
+        Search by lemma
+        :return: all sentences including tokens with this lemma
+        """
         lemma_results = []
         if lemma in self.lemma_index_data:
             for token in self.lemma_index_data[lemma]:
                 lemma_results.append(self.find_sentences_with_token(token))
         return lemma_results
 
-    # ПОИСК ФИЧИ БЕЗ ТОКЕНА
-
     def find_sentences_with_feature_no_token(self, feature_query):
-
+        """
+        Search only by feature: feature=feature_value
+        :return: all sentences including tokens with this feature
+        """
         results = []
 
-        # Разделяем запрос на ключ и значение
+        # splitting feature and feature value
         feature_key, feature_value = feature_query.split('=')
 
         for token in self.tokendata:
-
-            # print(token_key, "#", token_value)
-            # print(tokendata[token])
-            # print(len(tokendata[token]))
-            # print(len(tokendata[token]["features"]))
             for i in range(len(self.tokendata[token][feature_key])):
                 dic = {}
                 elem = self.tokendata[token][feature_key][i]
-                # print(elem)
                 if elem != None:
                     if feature_value == elem or feature_key == "features" and feature_value in elem:
-                        # Получаем text_id и sentence_id из text_sentence_id
                         text_sentence_id = self.tokendata[token]['text_sentence_id'][i]
-                        # print(text_sentence_id)
+                        # getting text_id and sentence_id
                         text_id = text_sentence_id.split('_')[0]
                         sentence_id = int(text_sentence_id.split('_')[1])
                         word_index = text_sentence_id.split('_')[2]
                         sentiment = self.metadata[text_id]["sentiment"]
                         film_name = self.metadata[text_id]["film_name"]
 
-                        # Получаем предложение из metadata
+                        # Getting the sentence from metadata by text_id and sentence_id
                         if text_id in self.metadata:
                             sentences = self.metadata[text_id]['sentences']
                             if 0 <= sentence_id < len(sentences):
@@ -465,6 +472,7 @@ class SentenceFinder:
 
         return results
 
+    # help functions
     @staticmethod
     def has_cyrillic(text):
         return bool(re.search('[а-яёА-ЯЁ]', text))
@@ -485,10 +493,14 @@ class SentenceFinder:
 
     @staticmethod
     def get_consecutive_sentences(final_dict):
-        # Словарь для хранения предложений по text_id
+        """
+        Get sentences where query tokens follow after each other
+        :return: all sentences with query token sequence
+        """
+        # Dict for sentences found by text_id
         sentences = {}
 
-        # Проходим по каждому слову в словаре
+        # Iterating over each word in the dictionary
         for word, entries in final_dict.items():
             for entry in entries:
                 text_id = entry['text_id']
@@ -497,29 +509,31 @@ class SentenceFinder:
                 sentiment = entry['sentiment']
                 film_name = entry['film_name']
 
-                # Создаем ключ для предложения
                 key = (text_id, sentence)
 
                 if key not in sentences:
                     sentences[key] = []
 
-                # Добавляем word_id в список для данного предложения
+                # Adding word_id to the list
                 sentences[key].append(word_id)
 
         result = []
 
-        # Проверяем каждое предложение на наличие последовательных word_id
+        # Checking all sentences for sequential word_id
         for (text_id, sentence), word_ids in sentences.items():
-            if len(word_ids) == len(final_dict):  # Проверяем, что предложение встречается у всех слов
+            if len(word_ids) == len(final_dict):  # Checking if sentence is found for all words
                 if sorted(word_ids) == list(
-                        range(min(word_ids), min(word_ids) + len(word_ids))):  # Проверяем последовательность
-                    #  print(list(range(min(word_ids), min(word_ids) + len(word_ids))))
+                        range(min(word_ids), min(word_ids) + len(word_ids))):  # Checking the sequence
                     result.append(
                         {'text_id': text_id, 'sentence': sentence, 'sentiment': sentiment, 'film_name': film_name})
 
         return result
 
     def process_query(self, query):
+        """
+        Choose the type of search function based on the query
+        :return: consecutive sentences with the query included
+        """
         if "'" in query:
             query = query.replace("'", '"')
         query_list = query.split()
@@ -533,18 +547,16 @@ class SentenceFinder:
                 for lemma in lemma_results:
                     final = final + lemma
                 final_dict[word] = final
-            # final_dict[word] = find_sentences_with_lemma(word, metadata, tokendata, lemma_index_data)
 
             if self.understand_query_part(word) == "token+tag":
-                # предположим что пользователь должен вбить тип тэга = тэг в query
+                # query looks like token+feature_type=feature_value
                 token_and_tags = word.split("+")
                 token = token_and_tags[0]
                 token_results = self.find_sentences_with_token(token[1:-1])
                 for tag in token_and_tags[1:]:
                     feature, feature_value = tag.split("=")
                     token_results = self.search_feature(feature, feature_value, token_results)
-                    # print(tag)
-                # print(token_results)
+
                 final_dict[word] = self.search_feature(token_results)
             if self.understand_query_part(word) == "lemma+tag":
                 lemma_and_tags = word.split("+")
@@ -568,41 +580,38 @@ class SentenceFinder:
                     tags_dic = {}
                     for tag in tags:
                         tags_dic[tag] = self.find_sentences_with_feature_no_token(tag)
-                    # print(tags_dic[tag][0:10])
+
                     all_dicts = [set(tuple(d.items()) for d in lst) for lst in tags_dic.values()]
 
                     common_dicts = set.intersection(*all_dicts)
 
                     final_dict[word] = [dict(tup) for tup in common_dicts]
-                    # print(final_dict)
 
                 else:
                     final_dict[word] = self.find_sentences_with_feature_no_token(word)
 
-        # не забыть добавить для просто тэга
-        # common_sentences = get_common_sentences(final_dict, query_list)
         consecutive_sentences = self.get_consecutive_sentences(final_dict)
 
         return consecutive_sentences
 
 
 if __name__ == "__main__":
-    # # collect dataset
-    # crawler = ReviewCrawler()
-    # crawler.crawl(json_autosave=True)
-    # crawler.pickle_save()
-    #
-    # # create two json-files of dataset
-    # with open('reviews.json', 'r') as f:
-    #     reviews = json.load(f)
-    #
-    # processor = Processor(reviews)
-    # processor.render_meta(file_output=True)
-    # # processor.read_data('metadata', 'metadata.json')
-    # processor.render_tokens(file_output=True)
-    # # processor.read_data('tokendata', 'tokendata.json')
-    # processor.create_index('lemma', file_output=True)
-    # processor.create_inner_index('upos', 'text_sentence_id', file_output=True)
+    # collect dataset
+    crawler = ReviewCrawler()
+    crawler.crawl(json_autosave=True)
+    crawler.pickle_save()
+
+    # create two json-files of dataset
+    with open('reviews.json', 'r') as f:
+        reviews = json.load(f)
+
+    processor = Processor(reviews)
+    processor.render_meta(file_output=True)
+    # processor.read_data('metadata', 'metadata.json')
+    processor.render_tokens(file_output=True)
+    # processor.read_data('tokendata', 'tokendata.json')
+    processor.create_index('lemma', file_output=True)
+    processor.create_inner_index('upos', 'text_sentence_id', file_output=True)
 
     # example of finder use
     finder = SentenceFinder(inner=True)
@@ -618,4 +627,3 @@ if __name__ == "__main__":
         print(found_sentences)
     else:
         print("WRONG QUERY")
-
