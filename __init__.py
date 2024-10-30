@@ -4,7 +4,7 @@ import csv
 import pandas as pd
 from dataset.datalib import SentenceFinder
 app = Flask(__name__)
-query = SentenceFinder(inner=True)
+query = SentenceFinder()
 
 
 @app.route('/')
