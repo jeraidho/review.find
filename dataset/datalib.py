@@ -362,7 +362,7 @@ class SentenceFinder:
         data = []
         # iterate through files
         for path in ['metadata.json', 'tokendata.json', 'lemma_index.json']:
-            with open(path if in_dataset else 'corpus/dataset/' + path, 'r', encoding='utf-8') as f:
+            with open(path if in_dataset else 'dataset/' + path, 'r', encoding='utf-8') as f:
                 data.append(json.load(f))
 
         return tuple(data)
@@ -536,7 +536,6 @@ class SentenceFinder:
             if len(word_ids) == len(final_dict):  # Checking if sentence is found for all words
                 if sorted(word_ids) == list(
                         range(min(word_ids), min(word_ids) + len(word_ids))):  # Checking the sequence
-                    print(sentence)
                     result.append(
                         {'text_id': text_id, 'sentence': sentence, 'sentiment': sentiment, 'film_name': film_name})
 
