@@ -362,7 +362,7 @@ class SentenceFinder:
         data = []
         # iterate through files
         for path in ['metadata.json', 'tokendata.json', 'lemma_index.json']:
-            with open(path if in_dataset else 'corpus/dataset/' + path, 'r', encoding='utf-8') as f:
+            with open(path if in_dataset else 'dataset/' + path, 'r', encoding='utf-8') as f:
                 data.append(json.load(f))
 
         return tuple(data)
@@ -521,7 +521,7 @@ class SentenceFinder:
                 sentiment = entry['sentiment']
                 film_name = entry['film_name']
 
-                key = (text_id, sentence)
+                key = (text_id, sentence, sentiment, film_name)
 
                 if key not in sentences:
                     sentences[key] = []
@@ -532,7 +532,7 @@ class SentenceFinder:
         result = []
 
         # Checking all sentences for sequential word_id
-        for (text_id, sentence), word_ids in sentences.items():
+        for (text_id, sentence, sentiment, film_name), word_ids in sentences.items():
             if len(word_ids) == len(final_dict):  # Checking if sentence is found for all words
                 if sorted(word_ids) == list(
                         range(min(word_ids), min(word_ids) + len(word_ids))):  # Checking the sequence
